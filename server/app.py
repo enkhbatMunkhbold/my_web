@@ -63,3 +63,25 @@ class Login(Resource):
     
     except Exception as e:
       return {'error': str(e)}, 500
+    
+api.add_resource(Login, '/login')
+
+class CheckSession(Resource):
+  def get(self):
+    user_id = session.get('user_id')
+    if user_id:
+      user = db.session.get(User, user_id)
+      if user:
+        user_data = user_schema.dump(user)
+        return user_data, 200
+      return {'error': 'Not authenticated.'}, 401
+    return {'error': 'Not authenticated.'}, 401
+
+api.add_resource(CheckSession, '/check_session')
+
+class Logout(Resource):
+  def delete(self):
+    session.pop('user_id', None)
+    return {}, 204
+  
+api.add_resource(Logout, '/logout')
