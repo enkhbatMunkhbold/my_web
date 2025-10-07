@@ -48,7 +48,7 @@ class Login(Resource):
       if not data or all(k in data for k in ['username', 'email', 'password']):
         return {'error': 'Missing required fields.'}, 400
       
-      user = data.query.filter_by(username=data['username']).first()
+      user = User.query.filter_by(username=data['username']).first()
       if not user:
         return {'message': 'Invalid credentials'}, 401
       
@@ -85,3 +85,6 @@ class Logout(Resource):
     return {}, 204
   
 api.add_resource(Logout, '/logout')
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
